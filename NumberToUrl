@@ -8,7 +8,7 @@ public class SlugService
         private readonly object _lockGenerate = new();
         private const string availableChars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        private static int Counter = 0;
+        private static int Counter = 1;
 
         public SlugService()
         { }
