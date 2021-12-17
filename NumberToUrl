@@ -1,0 +1,66 @@
+public class SlugService
+    {
+        private readonly object _lockGenerate = new();
+        private const string availableChars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+        private static int Counter = 0;
+
+        public SlugService()
+        { }
+
+        /// <summary>
+        /// Zero not allowed!
+        /// </summary>
+        /// <param name="counter"></param>
+        public void Init(int counter)
+        {
+            Counter = counter;
+        }
+
+        public string Generate()
+        {
+            string next;
+            lock (_lockGenerate)
+            {
+                var sb = new StringBuilder();
+
+                if(Counter <= availableChars.Length)
+                {
+                    next = availableChars[Counter-1].ToString();
+                }
+                else
+                {
+                    var index = Counter / availableChars.Length;
+
+                    if (index < availableChars.Length)
+                        sb.Append(availableChars[index - 1]);
+
+                    NextLevel(index);
+
+                    var ext = Counter % availableChars.Length;
+                    sb.Append(availableChars[ext]);
+
+
+                    next = sb.ToString();
+                }
+
+                Counter++;
+
+
+                void NextLevel(int index)
+                {
+                    if (index > availableChars.Length)
+                    {
+                        var i = index / availableChars.Length;
+                        NextLevel(i);
+                    }
+                    else
+                    {
+                        sb.Append(availableChars[index - 1]);
+                    }
+                }
+            }
+
+            return next;
+        }
+    }
